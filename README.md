@@ -1,0 +1,1 @@
+This is my notes on integrating stripe with any of my NextJS projects that utilize clerk for auth.  It updates the DB with purchase History and credits when a user successfully purchases a product from my stripe account.
