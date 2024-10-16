@@ -1,0 +1,95 @@
+
+Setup new account on stripe.com
+Maybe just need to do "Activate Payments", you get a wizard
+
+Settings -> Business
+- Account Details
+- Business details
+- External Payout Accounts 
+- Tax Details 
+
+Add product catalogue
+Shortcuts
+- Tax 
+-- Setup
+--- Add Tax Origin Address
+--- Test tax collection on invoices  --> yes, add fake customer, items, etc.  Add additional details to customer and add country, ensure GST collected.
+--- Preset Tax Category
+
+-- Thresholds
+--- Add a test tax registration
+
+Need Annual Returns (Original, OCR version) to upload to verify company.
+
+
+Add API Keys
+- Developers button top right Nav, API keys are in there
+--- MAKE SURE THEY MATCH .ENV WITH API CODE!!!  Spent time here because env keys were named different...... 
+
+example .env
+
+STRIPE_PUBLISHABLE_KEY_TEST=
+STRIPE_SECRET_KEY_TEST=
+STRIPE_WEBHOOK_SECRET_TEST=   (FROM 'stripe listen' results)
+
+# STRIPE_PUBLISHABLE_KEY_LIVE=
+# STRIPE_SECRET_KEY_LIVE=
+# STRIPE_WEBHOOK_SECRET_LIVE=
+
+
+cmd 
+
+/*
+ * Docs
+ * https://docs.stripe.com/stripe-cli
+ * https://dashboard.stripe.com/webhooks/create?endpoint_location=local
+*/
+
+stripe login ---> will need to grant auth with this
+
+// stripe listen --forward-to localhost:3000/api/webhooks/stripe/route
+stripe listen --forward-to localhost:3000/api/stripe/route
+------ DBL CHECK DIRECTORIES!!  Spent time here because dir was wrong... dumb
+^--- update your env var to the webhook secret key generated here for testing
+
+
+// use this to simulate a webhook event
+
+stripe trigger payment_intent.succeeded
+
+
+
+=========== ADD LINKS TO STRIPE FROM APP =====================
+
+Under Products, Payment Links
+-- Make product links, save in object with key url
+
+Copy and paste paymentModal.tsx and ../utils/zustand/usePaymentState.tsx from invoiceplus
+- nextcli add chip modal  (nextui used here)
+- update PlanTypes
+
+C&P /public/cc over for CC images
+
+Update plan object
+
+HACK: Right now, API gets the first item from getProductNameFromSession and uses that to determine what to do (add credits, etc.)
+-- May need to adjust if selling more than 1 product
+
+
+========== UPDATE THE DATABASE ========
+
+Copy and Paste /server/stripe2db folder (3 files)
+
+Update code here based on db schema
+- usually have a dbId and a clerkUser_id field
+
+
+
+Test CC:
+4242 4242 4242 4242
+any date in future, any 3 digit code
+https://docs.stripe.com/testing
+
+
+
+
